@@ -27,7 +27,7 @@ export async function buildUserscripts(srcPath, debug = false) {
  * Bundles the given module into a userscript.
  * @param {string} modulePath Path to the executable module of the userscript.
  */
-async function buildUserscript(modulePath, debug = false) {
+export async function buildUserscript(modulePath, debug = false) {
 	/**
 	 * Bundle all used modules with rollup and prepend the generated metadata block.
 	 * @type {import('rollup').RollupOptions}
