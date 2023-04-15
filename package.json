@@ -1,39 +1,35 @@
 {
-  "name": "@kellnerd/musicbrainz-scripts",
-  "version": "0.5.2",
+  "name": "@kellnerd/userscript-bundler",
+  "version": "0.6.0",
   "author": "David Kellner",
-  "description": "Bookmarklets and Userscripts for MusicBrainz.org",
+  "description": "Builds userscripts and bookmarklets from ES modules",
   "keywords": [
-    "musicbrainz",
-    "userscripts",
-    "bookmarklets"
+    "userscript",
+    "userscript-builder",
+    "bookmarklet",
+    "bookmarklet-generator",
+    "bundler"
   ],
-  "homepage": "https://github.com/kellnerd/musicbrainz-scripts#readme",
+  "homepage": "https://github.com/kellnerd/userscript-bundler#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kellnerd/musicbrainz-scripts.git"
+    "url": "https://github.com/kellnerd/userscript-bundler.git"
   },
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "node build.js"
+    "bookmarkletify": "node bookmarkletify.js"
   },
   "files": [
-    "src/*.js",
-    "src/data/",
-    "src/discogs/",
-    "src/relationship-editor/",
-    "src/types/",
-    "tools/",
+    "src/",
     "utils/",
-    "jsconfig.json"
+    "bookmarkletify.js"
   ],
   "main": "index.js",
-  "devDependencies": {
+  "dependencies": {
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-strip": "^3.0.2",
-    "cross-fetch": "^3.1.4",
     "extract-comments": "^1.1.0",
     "rollup": "^3.13.0",
     "rollup-plugin-ignore": "^1.0.10",
