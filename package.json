@@ -23,9 +23,12 @@
   "files": [
     "src/",
     "utils/",
+    "index.js",
+    "index.d.ts",
     "bookmarkletify.js"
   ],
   "main": "index.js",
+  "types": "index.d.ts",
   "dependencies": {
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",

@@ -1,4 +1,4 @@
-type UserscriptSpecificMetadata = {
+export type UserscriptSpecificMetadata = {
 	name: string;
 	version?: string;
 	description: string;
@@ -14,7 +14,7 @@ type UserscriptSpecificMetadata = {
 	exclude?: MaybeArray<string | RegExp>;
 }
 
-type UserscriptDefaultMetadata = {
+export type UserscriptDefaultMetadata = {
 	author: string;
 	namespace: string | URL;
 	homepageURL: string | URL;
@@ -23,9 +23,9 @@ type UserscriptDefaultMetadata = {
 	supportURL: string | URL;
 }
 
-type UserscriptMetadata = UserscriptSpecificMetadata & Partial<UserscriptDefaultMetadata>;
+export type UserscriptMetadata = UserscriptSpecificMetadata & Partial<UserscriptDefaultMetadata>;
 
-type EnhancedUserscriptMetadata = UserscriptMetadata & {
+export type EnhancedUserscriptMetadata = UserscriptMetadata & {
 	/** List of features which will be shown in the README, items may contain inline Markdown. */
 	features?: string[];
 };

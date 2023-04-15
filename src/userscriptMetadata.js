@@ -4,7 +4,7 @@ import { pathToFileURL } from 'url';
 import { GITHUB } from './github.js';
 import { preferArray } from '../utils/array/scalar.js';
 
-/** @type {Array<keyof UserscriptMetadata>} */
+/** @type {Array<keyof import('./types/UserscriptMetadata.js').UserscriptMetadata>} */
 const metadataOrder = [
 	'name',
 	'version',
@@ -36,7 +36,7 @@ export async function generateMetadataBlock(userscriptPath) {
 	const date = new Date(); // current date will be used as version identifier
 	const maxKeyLength = Math.max(...metadataOrder.map((key) => key.length));
 
-	/** @type {UserscriptDefaultMetadata} */
+	/** @type {import('./types/UserscriptMetadata.js').UserscriptDefaultMetadata} */
 	const defaultMetadata = {
 		author: GITHUB.owner,
 		namespace: GITHUB.repoUrl,
@@ -46,7 +46,7 @@ export async function generateMetadataBlock(userscriptPath) {
 		supportURL: GITHUB.supportUrl,
 	};
 
-	/** @type {UserscriptMetadata} */
+	/** @type {import('./types/UserscriptMetadata.js').UserscriptMetadata} */
 	const metadata = {
 		...defaultMetadata,
 		version: [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('.'),
@@ -69,7 +69,7 @@ export async function generateMetadataBlock(userscriptPath) {
 /**
  * Loads the metadata for the given userscript from the .meta.js ES module of the same name.
  * @param {string} userscriptPath
- * @returns {Promise<EnhancedUserscriptMetadata>}
+ * @returns {Promise<import('./types/UserscriptMetadata.js').EnhancedUserscriptMetadata>}
  */
 export async function loadMetadata(userscriptPath) {
 	const metadataPath = userscriptPath.replace(/\.user\.js$/, '.meta.js');
