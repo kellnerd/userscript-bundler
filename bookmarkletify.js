@@ -1,4 +1,4 @@
-import { buildBookmarklet } from './buildBookmarklets.js';
+import { buildBookmarklet } from './src/buildBookmarklets.js';
 
 if (process.argv.length < 3) {
 	process.exit(1);
