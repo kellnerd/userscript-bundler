@@ -13,7 +13,11 @@ The default build function provides all these features, but you can also write y
 
 ## Usage
 
-1. Install the package with `npm install --save-dev kellnerd/userscript-bundler`.
+1. Install the package:
+
+	```sh
+	npm install --save-dev kellnerd/userscript-bundler
+	```
 
 	You can also install a specific version with `npm install --save-dev kellnerd/userscript-bundler#v0.6.0` (where the part after the hash can be any tag or commit).
 
@@ -59,7 +63,8 @@ The default build function provides all these features, but you can also write y
 	```js
 	/** 
 	 * The first block comment in this file will be used as description of the bookmarklet.
-	 * The name of the bookmarklet will be the title-cased version of the camel-cased filename, i.e. "Example Bookmarklet".
+	 * The name of the bookmarklet will be the title-cased version of the camel-cased filename,
+	 * i.e. "Example Bookmarklet" for this example.
 	 */
 	
 	console.log('Hello world!');
@@ -67,9 +72,9 @@ The default build function provides all these features, but you can also write y
 
 7. Ensure that your `package.json` file contains the URL of your GitHub repository, it is needed to automatically generate update URLs for your userscripts.
 
-	```json
+	```jsonc
 	{
-		...
+		// ...
 		"repository": {
 			"type": "git",
 			"url": "https://github.com/<username>/<repository>.git"
@@ -77,7 +82,7 @@ The default build function provides all these features, but you can also write y
 		"type": "module",
 		"devDependencies": {
 			"@kellnerd/userscript-bundler": "github:kellnerd/userscript-bundler",
-			...
+			// ...
 		}
 	}
 	```
@@ -93,6 +98,6 @@ The result will be output directly on screen and no files will be modified.
 
 ## Showcases
 
-If you are using this package to build your own userscripts or bookmarklet, you can create a pull request to be included in the following list.
+If you are using this package to build your own userscripts or bookmarklets, you can create a pull request to be included in the following list.
 
 - https://github.com/kellnerd/musicbrainz-scripts
