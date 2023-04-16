@@ -9,9 +9,18 @@ import { getMarkdownFiles } from './getFiles.js'
 import { sourceAndInstallButton } from './github.js';
 import { loadMetadata } from './userscriptMetadata.js';
 
+/**
+ * Returns the formatted name of the userscript for use in documentation.
+ * @type {import('./types/BuildOptions.js').UserscriptNameFormatter}
+ */
+function defaultNameFormatter({ metadata }) {
+	return metadata.name;
+}
+
 export async function build({
 	bookmarkletBasePath = false,
 	userscriptBasePath = 'src/userscripts',
+	userscriptNameFormatter = defaultNameFormatter,
 	readmePath = 'README.md',
 	docBasePath = 'doc',
 	debug = false,
@@ -34,7 +43,7 @@ export async function build({
 		const filePath = path.join(userscriptBasePath, baseName + '.user.js');
 		const metadata = await loadMetadata(filePath);
 
-		readme.write(`\n### ${camelToTitleCase(baseName)}\n`);
+		readme.write(`\n### ${userscriptNameFormatter({ baseName, metadata })}\n`);
 		readme.write('\n' + metadata.description + '\n');
 		metadata.features?.forEach((item) => readme.write(`- ${item}\n`));
 		readme.write(sourceAndInstallButton(baseName));
