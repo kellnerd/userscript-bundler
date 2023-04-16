@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { camelToTitleCase } from '@kellnerd/es-utils/string/casingStyle.js';
 
 import { buildBookmarklets } from './buildBookmarklets.js';
 import { buildUserscripts } from './buildUserscripts.js';
@@ -7,7 +8,6 @@ import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
 import { sourceAndInstallButton } from './github.js';
 import { loadMetadata } from './userscriptMetadata.js';
-import { camelToTitleCase } from '../utils/string/casingStyle.js';
 
 export async function build({
 	bookmarkletBasePath = false,

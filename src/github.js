@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import {
 	camelToTitleCase,
 	slugify,
-} from '../utils/string/casingStyle.js';
+} from '@kellnerd/es-utils/string/casingStyle.js';
 
 // Inspired by https://github.com/ROpdebee/mb-userscripts/blob/841fa757a21d53a2ce714c7868ffb98116c15ffb/build/plugin-userscript.ts
 class GitRepo {

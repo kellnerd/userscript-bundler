@@ -1,8 +1,8 @@
 import path from 'path';
 import { pathToFileURL } from 'url';
+import { preferArray } from '@kellnerd/es-utils/array/scalar.js';
 
 import { GITHUB } from './github.js';
-import { preferArray } from '../utils/array/scalar.js';
 
 /** @type {Array<keyof import('./types/UserscriptMetadata.js').UserscriptMetadata>} */
 const metadataOrder = [

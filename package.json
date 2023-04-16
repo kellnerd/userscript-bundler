@@ -1,6 +1,6 @@
 {
   "name": "@kellnerd/userscript-bundler",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "David Kellner",
   "description": "Builds userscripts and bookmarklets from ES modules",
   "keywords": [
@@ -22,7 +22,6 @@
   },
   "files": [
     "src/",
-    "utils/",
     "index.js",
     "index.d.ts",
     "bookmarkletify.js"
@@ -30,6 +29,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
+    "@kellnerd/es-utils": "github:kellnerd/es-utils",
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-strip": "^3.0.2",

@@ -2,9 +2,9 @@ import path from 'path';
 import { rollup } from 'rollup';
 import rollupIgnore from 'rollup-plugin-ignore';
 import { minify } from 'terser';
+import { zipObject } from '@kellnerd/es-utils/object/zipObject.js';
 
 import { getScriptFiles } from './getFiles.js';
-import { zipObject } from '../utils/object/zipObject.js';
 
 /**
  * Builds a bookmarklet for each JavaScript module inside the given source directory.
