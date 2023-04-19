@@ -18,29 +18,29 @@ function defaultNameFormatter({ metadata }) {
 }
 
 export async function build({
-	bookmarkletBasePath = false,
-	userscriptBasePath = 'src/userscripts',
+	bookmarkletSourcePath = false,
+	userscriptSourcePath = 'src/userscripts',
 	userscriptNameFormatter = defaultNameFormatter,
+	docSourcePath = 'doc',
 	readmePath = 'README.md',
-	docBasePath = 'doc',
 	debug = false,
 } = {}) {
 	// build userscripts
-	const userscriptNames = await buildUserscripts(userscriptBasePath, debug);
+	const userscriptNames = await buildUserscripts(userscriptSourcePath, debug);
 
 	// prepare bookmarklets (optional)
-	const bookmarklets = bookmarkletBasePath ? await buildBookmarklets(bookmarkletBasePath, debug) : {};
+	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, debug) : {};
 
 	// prepare README file and write header
 	const readme = fs.createWriteStream(readmePath);
-	const readmeHeader = fs.readFileSync(path.join(docBasePath, '_header.md'), { encoding: 'utf-8' });
+	const readmeHeader = fs.readFileSync(path.join(docSourcePath, '_header.md'), { encoding: 'utf-8' });
 	readme.write(readmeHeader);
 
 	// write userscripts and their extracted documentation to the README
 	readme.write('\n## Userscripts\n');
 
 	for (let baseName of userscriptNames) {
-		const filePath = path.join(userscriptBasePath, baseName + '.user.js');
+		const filePath = path.join(userscriptSourcePath, baseName + '.user.js');
 		const metadata = await loadMetadata(filePath);
 
 		readme.write(`\n### ${userscriptNameFormatter({ baseName, metadata })}\n`);
@@ -51,7 +51,7 @@ export async function build({
 		// also insert the code snippet if there is a bookmarklet of the same name
 		const bookmarkletFileName = baseName + '.js';
 		if (bookmarkletFileName in bookmarklets) {
-			const bookmarkletPath = path.join(bookmarkletBasePath, bookmarkletFileName);
+			const bookmarkletPath = path.join(bookmarkletSourcePath, bookmarkletFileName);
 
 			readme.write('\nAlso available as a bookmarklet with less features:\n');
 			readme.write(extractDocumentation(bookmarkletPath) + '\n');
@@ -67,9 +67,9 @@ export async function build({
 
 		for (let fileName in bookmarklets) {
 			const baseName = path.basename(fileName, '.js');
-			const bookmarkletPath = path.join(bookmarkletBasePath, fileName);
+			const bookmarkletPath = path.join(bookmarkletSourcePath, fileName);
 
-			readme.write(`\n### [${camelToTitleCase(baseName)}](${relevantSourceFile(fileName, bookmarkletBasePath)})\n`);
+			readme.write(`\n### [${camelToTitleCase(baseName)}](${relevantSourceFile(fileName, bookmarkletSourcePath)})\n`);
 
 			readme.write(extractDocumentation(bookmarkletPath) + '\n');
 			readme.write('\n```js\n' + bookmarklets[fileName] + '\n```\n');
@@ -77,9 +77,9 @@ export async function build({
 	}
 
 	// append all additional documentation files to the README
-	const docs = await getMarkdownFiles(docBasePath);
+	const docs = await getMarkdownFiles(docSourcePath);
 
-	docs.map((file) => path.join(docBasePath, file)).forEach((filePath) => {
+	docs.map((file) => path.join(docSourcePath, file)).forEach((filePath) => {
 		const content = fs.readFileSync(filePath, { encoding: 'utf-8' });
 		readme.write('\n' + content);
 	});
