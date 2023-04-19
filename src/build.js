@@ -17,8 +17,18 @@ function defaultNameFormatter({ metadata }) {
 	return metadata.name;
 }
 
+/**
+ * Builds userscripts, prepares bookmarklets and generates a nicely formatted documentation page.
+ * @param {Object} args
+ * @param {string?} args.bookmarkletSourcePath Directory containing bookmarklet source files.
+ * @param {string} args.userscriptSourcePath Directory containing userscript source files.
+ * @param {import('./types/BuildOptions.js').UserscriptNameFormatter} args.userscriptNameFormatter Function used to format userscript names in documentation.
+ * @param {string} args.docSourcePath Directory containing markdown documentation files.
+ * @param {string} args.readmePath Path to write generated README file in markdown format.
+ * @param {boolean} args.debug Flag to enable debug output.
+ */
 export async function build({
-	bookmarkletSourcePath = false,
+	bookmarkletSourcePath = null,
 	userscriptSourcePath = 'src/userscripts',
 	userscriptNameFormatter = defaultNameFormatter,
 	docSourcePath = 'doc',
