@@ -9,14 +9,15 @@ import { getScriptFiles } from './getFiles.js';
 
 /**
  * Builds a bookmarklet for each JavaScript module inside the given source directory.
- * @param {string} srcPath Source directory containing the modules.
+ * @param {string} sourcePath Source directory containing the executable modules.
+ * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} options
  * @returns {Promise<{[name: string]: string}>} Object which maps script names to bookmarklets.
  */
-export async function buildBookmarklets(srcPath, debug = false) {
-	const scriptFiles = await getScriptFiles(srcPath);
+export async function buildBookmarklets(sourcePath, options) {
+	const scriptFiles = await getScriptFiles(sourcePath);
 	const bookmarklets = await Promise.all(scriptFiles
-		.map((file) => path.join(srcPath, file))
-		.map((modulePath) => buildBookmarklet(modulePath, debug))
+		.map((file) => path.join(sourcePath, file))
+		.map((modulePath) => buildBookmarklet(modulePath, options))
 	);
 
 	return zipObject(scriptFiles, bookmarklets);
@@ -26,9 +27,10 @@ export async function buildBookmarklets(srcPath, debug = false) {
 /**
  * Bundles and minifies the given module into a bookmarklet.
  * @param {string} modulePath Path to the executable module of the bookmarklet.
+ * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} options
  * @returns {Promise<string>} Bookmarklet code as a `javascript:` URI.
  */
-export async function buildBookmarklet(modulePath, debug = false) {
+export async function buildBookmarklet(modulePath, { debug = false }) {
 	/**
 	 * Bundle all used modules into an IIFE with rollup.
 	 * @type {import('rollup').RollupOptions}

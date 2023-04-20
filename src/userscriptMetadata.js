@@ -2,8 +2,6 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { preferArray } from '@kellnerd/es-utils/array/scalar.js';
 
-import { GitRepo } from './github.js';
-
 /** @type {Array<keyof import('./types/UserscriptMetadata.js').UserscriptMetadata>} */
 const metadataOrder = [
 	'name',
@@ -30,9 +28,9 @@ const metadataOrder = [
 /**
  * Generates the metadata block for the given userscript from the corresponding .meta.js ES module.
  * @param {string} userscriptPath
- * @param {GitRepo} gitRepo
+ * @param {import('./types/BuildOptions.js').UserscriptMetadataOptions} options
  */
-export async function generateMetadataBlock(userscriptPath, gitRepo) {
+export async function generateMetadataBlock(userscriptPath, { gitRepo }) {
 	const baseName = path.basename(userscriptPath, '.user.js');
 	const date = new Date(); // current date will be used as version identifier
 	const maxKeyLength = Math.max(...metadataOrder.map((key) => key.length));

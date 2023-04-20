@@ -6,21 +6,19 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import rollupStrip from '@rollup/plugin-strip';
 
 import { getScriptFiles } from './getFiles.js';
-import { GitRepo } from './github.js';
 import { generateMetadataBlock } from './userscriptMetadata.js';
 
 /**
  * Build a userscript for each JavaScript module inside the given source directory.
- * @param {Object} args
- * @param {string} args.sourcePath Source directory containing the modules.
- * @param {GitRepo} args.gitRepo
+ * @param {string} sourcePath Source directory containing the executable modules.
+ * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
  * @returns {Promise<string[]>} Array of userscript file names (without extension).
  */
-export async function buildUserscripts({ sourcePath, gitRepo, debug = false }) {
+export async function buildUserscripts(sourcePath, options) {
 	const scriptFiles = await getScriptFiles(sourcePath, '.user.js');
 	scriptFiles
 		.map((file) => path.join(sourcePath, file))
-		.forEach((modulePath) => buildUserscript({ sourcePath: modulePath, gitRepo, debug }));
+		.forEach((modulePath) => buildUserscript(modulePath, options));
 
 	return scriptFiles.map((file) => path.basename(file, '.user.js'));
 }
@@ -28,24 +26,26 @@ export async function buildUserscripts({ sourcePath, gitRepo, debug = false }) {
 
 /**
  * Bundles the given module into a userscript.
- * @param {Object} args
- * @param {string} args.sourcePath Path containing the executable module of the userscript.
- * @param {GitRepo} args.gitRepo
+ * @param {string} modulePath Path containing the executable module of the userscript.
+ * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
  */
-export async function buildUserscript({ sourcePath, gitRepo, debug = false }) {
+export async function buildUserscript(modulePath, {
+	gitRepo,
+	debug = false,
+}) {
 	/**
 	 * Bundle all used modules with rollup and prepend the generated metadata block.
 	 * @type {import('rollup').RollupOptions}
 	 */
 	const rollupOptions = {
-		input: sourcePath,
+		input: modulePath,
 		treeshake: {
 			moduleSideEffects: false,
 		},
 		output: {
 			dir: 'dist',
 			format: 'iife',
-			banner: generateMetadataBlock(sourcePath, gitRepo),
+			banner: generateMetadataBlock(modulePath, { gitRepo }),
 		},
 		plugins: [
 			nodeResolve(),
@@ -60,7 +60,7 @@ export async function buildUserscript({ sourcePath, gitRepo, debug = false }) {
 	const bundle = await rollup(rollupOptions);
 
 	if (debug) {
-		console.debug(`${sourcePath} depends on:`, bundle.watchFiles);
+		console.debug(`${modulePath} depends on:`, bundle.watchFiles);
 	}
 
 	await bundle.write(rollupOptions.output);

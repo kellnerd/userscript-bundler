@@ -12,7 +12,7 @@ export type UserscriptSpecificMetadata = {
 	'exclude-match'?: MaybeArray<string>;
 	include?: MaybeArray<string | RegExp>;
 	exclude?: MaybeArray<string | RegExp>;
-}
+};
 
 export type UserscriptDefaultMetadata = {
 	author: string;
@@ -21,7 +21,7 @@ export type UserscriptDefaultMetadata = {
 	downloadURL: string | URL;
 	updateURL: string | URL;
 	supportURL: string | URL;
-}
+};
 
 export type UserscriptMetadata = UserscriptSpecificMetadata & Partial<UserscriptDefaultMetadata>;
 

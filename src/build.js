@@ -19,13 +19,14 @@ function defaultNameFormatter({ metadata }) {
 
 /**
  * Builds userscripts, prepares bookmarklets and generates a nicely formatted documentation page.
- * @param {Object} args
- * @param {string?} args.bookmarkletSourcePath Directory containing bookmarklet source files.
- * @param {string} args.userscriptSourcePath Directory containing userscript source files.
- * @param {import('./types/BuildOptions.js').UserscriptNameFormatter} args.userscriptNameFormatter Function used to format userscript names in documentation.
- * @param {string} args.docSourcePath Directory containing markdown documentation files.
- * @param {string} args.readmePath Path to write generated README file in markdown format.
- * @param {boolean} args.debug Flag to enable debug output.
+ * @param {Object} options
+ * @param {string?} options.bookmarkletSourcePath Directory containing bookmarklet source files.
+ * @param {string} options.userscriptSourcePath Directory containing userscript source files.
+ * @param {import('./types/BuildOptions.js').UserscriptNameFormatter} options.userscriptNameFormatter
+ * Function used to format userscript names in documentation.
+ * @param {string} options.docSourcePath Directory containing markdown documentation files.
+ * @param {string} options.readmePath Path to write generated README file in markdown format.
+ * @param {boolean} options.debug Flag to enable debug output.
  */
 export async function build({
 	bookmarkletSourcePath = null,
@@ -38,10 +39,10 @@ export async function build({
 	const gitRepo = GitRepo.fromPackageMetadata({ userscriptNameFormatter });
 
 	// build userscripts
-	const userscriptNames = await buildUserscripts({ sourcePath: userscriptSourcePath, gitRepo, debug });
+	const userscriptNames = await buildUserscripts(userscriptSourcePath, { gitRepo, debug });
 
 	// prepare bookmarklets (optional)
-	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, debug) : {};
+	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, { debug }) : {};
 
 	// prepare README file and write header
 	const readme = fs.createWriteStream(readmePath);

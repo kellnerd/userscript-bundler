@@ -8,8 +8,13 @@ export class GitRepo {
 	defaultBranch = 'main';
 	distributionPath = 'dist';
 
-	/** @param {URL} repoUrl */
-	constructor(repoUrl, userscriptNameFormatter) {
+	/**
+	 * @param {URL} repoUrl URL of the git repository which provides the userscripts.
+	 * @param {import('./types/BuildOptions').GitRepoOptions} options
+	 */
+	constructor(repoUrl, {
+		userscriptNameFormatter,
+	}) {
 		const [owner, repoName] = repoUrl.pathname.match(/^\/([^/]+)\/([^/]+?)(?:\.git|$)/)?.slice(1) ?? [];
 		if (!owner || !repoName) throw new Error(`Malformed git repo URL ${repoUrl}`);
 
@@ -29,22 +34,21 @@ export class GitRepo {
 
 	/**
 	 * Instantiates a `GitRepo` object using data parsed from the provided `package.json` file.
-	 * @param {Object} args
-	 * @param {string} args.packageJsonPath
-	 * @param {import('./types/BuildOptions').UserscriptNameFormatter} args.userscriptNameFormatter
+	 * @param {import('./types/BuildOptions').GitRepoFromPackageOptions} options
 	 */
-	static fromPackageMetadata({ packageJsonPath = 'package.json', userscriptNameFormatter }) {
+	static fromPackageMetadata({
+		packageJsonPath = 'package.json',
+		...repoOptions
+	}) {
 		/** @type {typeof import('../package.json')} */
 		const metadata = JSON.parse(readFileSync(packageJsonPath));
 		const repoUrl = new URL(metadata.repository.url);
-		return new GitRepo(repoUrl, userscriptNameFormatter);
+		return new GitRepo(repoUrl, repoOptions);
 	}
 
 	/**
 	 * Generates a link to the section in the README for the given script.
-	 * @param {Object} args
-	 * @param {string} args.baseName Basename of the script to be linked.
-	 * @param {import('./types/UserscriptMetadata').UserscriptMetadata} args.metadata Metadata of the script to be linked.
+	 * @param {import('./types/BuildOptions').UserscriptNameFormatterData} options
 	 */
 	readmeSectionUrl({ baseName, metadata }) {
 		return `${this.repoUrl}#${slugify(this.userscriptNameFormatter({ baseName, metadata }))}`;
