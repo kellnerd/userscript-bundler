@@ -68,7 +68,7 @@ export async function buildBookmarklet(modulePath, { debug = false }) {
 		ecma: 2020,
 		compress: {
 			expression: true,
-			drop_console: true,
+			drop_console: !debug,
 			passes: 3,
 			unsafe: true,
 			unsafe_arrows: true,

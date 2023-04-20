@@ -52,7 +52,7 @@ export async function buildUserscript(modulePath, {
 			rollupIgnore(['cross-fetch/dist/node-polyfill.js']),
 			rollupImage(),
 			rollupStrip({
-				functions: ['console.debug'],
+				functions: debug ? [] : ['console.debug'],
 			}),
 		],
 	};
