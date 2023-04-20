@@ -10,14 +10,15 @@ import { generateMetadataBlock } from './userscriptMetadata.js';
 
 /**
  * Build a userscript for each JavaScript module inside the given source directory.
- * @param {string} srcPath Source directory containing the modules.
+ * @param {string} sourcePath Source directory containing the executable modules.
+ * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
  * @returns {Promise<string[]>} Array of userscript file names (without extension).
  */
-export async function buildUserscripts(srcPath, debug = false) {
-	const scriptFiles = await getScriptFiles(srcPath, '.user.js');
+export async function buildUserscripts(sourcePath, options) {
+	const scriptFiles = await getScriptFiles(sourcePath, '.user.js');
 	scriptFiles
-		.map((file) => path.join(srcPath, file))
-		.forEach((modulePath) => buildUserscript(modulePath, debug));
+		.map((file) => path.join(sourcePath, file))
+		.forEach((modulePath) => buildUserscript(modulePath, options));
 
 	return scriptFiles.map((file) => path.basename(file, '.user.js'));
 }
@@ -25,9 +26,13 @@ export async function buildUserscripts(srcPath, debug = false) {
 
 /**
  * Bundles the given module into a userscript.
- * @param {string} modulePath Path to the executable module of the userscript.
+ * @param {string} modulePath Path containing the executable module of the userscript.
+ * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
  */
-export async function buildUserscript(modulePath, debug = false) {
+export async function buildUserscript(modulePath, {
+	gitRepo,
+	debug = false,
+}) {
 	/**
 	 * Bundle all used modules with rollup and prepend the generated metadata block.
 	 * @type {import('rollup').RollupOptions}
@@ -40,7 +45,7 @@ export async function buildUserscript(modulePath, debug = false) {
 		output: {
 			dir: 'dist',
 			format: 'iife',
-			banner: generateMetadataBlock(modulePath),
+			banner: generateMetadataBlock(modulePath, { gitRepo }),
 		},
 		plugins: [
 			nodeResolve(),

@@ -2,8 +2,6 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { preferArray } from '@kellnerd/es-utils/array/scalar.js';
 
-import { GITHUB } from './github.js';
-
 /** @type {Array<keyof import('./types/UserscriptMetadata.js').UserscriptMetadata>} */
 const metadataOrder = [
 	'name',
@@ -30,20 +28,21 @@ const metadataOrder = [
 /**
  * Generates the metadata block for the given userscript from the corresponding .meta.js ES module.
  * @param {string} userscriptPath
+ * @param {import('./types/BuildOptions.js').UserscriptMetadataOptions} options
  */
-export async function generateMetadataBlock(userscriptPath) {
+export async function generateMetadataBlock(userscriptPath, { gitRepo }) {
 	const baseName = path.basename(userscriptPath, '.user.js');
 	const date = new Date(); // current date will be used as version identifier
 	const maxKeyLength = Math.max(...metadataOrder.map((key) => key.length));
 
 	/** @type {import('./types/UserscriptMetadata.js').UserscriptDefaultMetadata} */
 	const defaultMetadata = {
-		author: GITHUB.owner,
-		namespace: GITHUB.repoUrl,
-		homepageURL: GITHUB.readmeUrl(baseName),
-		downloadURL: GITHUB.userscriptRawUrl(baseName),
-		updateURL: GITHUB.userscriptRawUrl(baseName),
-		supportURL: GITHUB.supportUrl,
+		author: gitRepo.owner,
+		namespace: gitRepo.repoUrl,
+		homepageURL: '',
+		downloadURL: gitRepo.userscriptRawUrl(baseName),
+		updateURL: gitRepo.userscriptRawUrl(baseName),
+		supportURL: gitRepo.supportUrl,
 	};
 
 	/** @type {import('./types/UserscriptMetadata.js').UserscriptMetadata} */
@@ -53,6 +52,8 @@ export async function generateMetadataBlock(userscriptPath) {
 		grant: 'none',
 		...await loadMetadata(userscriptPath),
 	};
+
+	metadata.homepageURL = gitRepo.readmeSectionUrl({ baseName, metadata });
 
 	const metadataBlock = metadataOrder.flatMap((key) => {
 		return preferArray(metadata[key])

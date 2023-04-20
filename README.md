@@ -27,9 +27,9 @@ The default build function provides all these features, but you can also write y
 	import { build } from '@kellnerd/userscript-bundler';
 
 	build({
-		userscriptBasePath: 'src/userscripts',
-		bookmarkletBasePath: 'src/bookmarklets', // bookmarklets are optional
-		docBasePath: 'doc',
+		userscriptSourcePath: 'src/userscripts',
+		bookmarkletSourcePath: 'src/bookmarklets', // bookmarklets are optional
+		docSourcePath: 'doc',
 	});
 	```
 

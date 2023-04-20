@@ -1,22 +1,27 @@
 import { readFileSync } from 'fs';
 import {
-	camelToTitleCase,
 	slugify,
 } from '@kellnerd/es-utils/string/casingStyle.js';
 
 // Inspired by https://github.com/ROpdebee/mb-userscripts/blob/841fa757a21d53a2ce714c7868ffb98116c15ffb/build/plugin-userscript.ts
-class GitRepo {
+export class GitRepo {
 	defaultBranch = 'main';
 	distributionPath = 'dist';
 
-	/** @param {URL} repoUrl */
-	constructor(repoUrl) {
+	/**
+	 * @param {URL} repoUrl URL of the git repository which provides the userscripts.
+	 * @param {import('./types/BuildOptions').GitRepoOptions} options
+	 */
+	constructor(repoUrl, {
+		userscriptNameFormatter,
+	}) {
 		const [owner, repoName] = repoUrl.pathname.match(/^\/([^/]+)\/([^/]+?)(?:\.git|$)/)?.slice(1) ?? [];
 		if (!owner || !repoName) throw new Error(`Malformed git repo URL ${repoUrl}`);
 
 		this.host = repoUrl.host
 		this.owner = owner;
 		this.repoName = repoName;
+		this.userscriptNameFormatter = userscriptNameFormatter;
 	}
 
 	get repoUrl() {
@@ -27,19 +32,26 @@ class GitRepo {
 		return `${this.repoUrl}/issues`;
 	}
 
-	static fromPackageMetadata(packageJsonPath = 'package.json') {
+	/**
+	 * Instantiates a `GitRepo` object using data parsed from the provided `package.json` file.
+	 * @param {import('./types/BuildOptions').GitRepoFromPackageOptions} options
+	 */
+	static fromPackageMetadata({
+		packageJsonPath = 'package.json',
+		...repoOptions
+	}) {
 		/** @type {typeof import('../package.json')} */
 		const metadata = JSON.parse(readFileSync(packageJsonPath));
 		const repoUrl = new URL(metadata.repository.url);
-		return new GitRepo(repoUrl);
+		return new GitRepo(repoUrl, repoOptions);
 	}
 
 	/**
-	 * Generates a link to the README section which corresponds to the given name.
-	 * @param {string} baseName Name of the section, can be the script's name in camel case.
+	 * Generates a link to the section in the README for the given script.
+	 * @param {import('./types/BuildOptions').UserscriptNameFormatterData} options
 	 */
-	readmeUrl(baseName) {
-		return `${this.repoUrl}#${slugify(camelToTitleCase(baseName))}`;
+	readmeSectionUrl({ baseName, metadata }) {
+		return `${this.repoUrl}#${slugify(this.userscriptNameFormatter({ baseName, metadata }))}`;
 	}
 
 	/**
@@ -57,17 +69,15 @@ class GitRepo {
 	userscriptRawUrl(baseName) {
 		return 'https://raw.' + [this.host, this.owner, this.repoName, this.defaultBranch, this.userscriptPath(baseName)].join('/');
 	}
-}
 
-export const GITHUB = GitRepo.fromPackageMetadata();
-
-/**
- * Generates button-like links to install a userscript and to view its source code on GitHub.
- * @param {string} baseName Name of the userscript file (without extension).
- */
-export function sourceAndInstallButton(baseName) {
-	const sourceButtonLink = 'https://img.shields.io/badge/Source-grey.svg?style=for-the-badge&logo=github';
-	const installButtonLink = 'https://img.shields.io/badge/Install-success.svg?style=for-the-badge&logo=tampermonkey';
-	return `\n[![Install](${installButtonLink})](${GITHUB.userscriptPath(baseName)}?raw=1)\n` +
-		`[![Source](${sourceButtonLink})](${GITHUB.userscriptPath(baseName)})\n`;
+	/**
+	 * Generates button-like links to install a userscript and to view its source code on GitHub.
+	 * @param {string} baseName Name of the userscript file (without extension).
+	 */
+	sourceAndInstallButton(baseName) {
+		const sourceButtonLink = 'https://img.shields.io/badge/Source-grey.svg?style=for-the-badge&logo=github';
+		const installButtonLink = 'https://img.shields.io/badge/Install-success.svg?style=for-the-badge&logo=tampermonkey';
+		return `\n[![Install](${installButtonLink})](${this.userscriptPath(baseName)}?raw=1)\n` +
+			`[![Source](${sourceButtonLink})](${this.userscriptPath(baseName)})\n`;
+	}
 }
