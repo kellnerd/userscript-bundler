@@ -30,7 +30,10 @@ export async function buildBookmarklets(sourcePath, options) {
  * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} options
  * @returns {Promise<string>} Bookmarklet code as a `javascript:` URI.
  */
-export async function buildBookmarklet(modulePath, { debug = false }) {
+export async function buildBookmarklet(modulePath, {
+	outputPath,
+	debug = false,
+}) {
 	/**
 	 * Bundle all used modules into an IIFE with rollup.
 	 * @type {import('rollup').RollupOptions}
@@ -41,7 +44,7 @@ export async function buildBookmarklet(modulePath, { debug = false }) {
 			moduleSideEffects: false,
 		},
 		output: {
-			dir: 'dist/bookmarklets',
+			dir: outputPath,
 			format: 'iife',
 			strict: false,
 		},

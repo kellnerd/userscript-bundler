@@ -32,5 +32,7 @@ export type UserscriptMetadataOptions = {
 };
 
 export type BookmarkletBuildOptions = {
+	/** Directory to store bundled but uncompressed bookmarklet code, only used in debug mode. */
+	outputPath: string;
 	debug?: boolean;
 };

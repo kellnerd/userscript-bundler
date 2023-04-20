@@ -51,7 +51,10 @@ export async function build({
 	});
 
 	// prepare bookmarklets (optional)
-	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, { debug }) : {};
+	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, {
+		outputPath: path.join(outputPath, 'bookmarklets'),
+		debug,
+	}) : {};
 
 	// prepare README file and write header
 	const readme = fs.createWriteStream(readmePath);
