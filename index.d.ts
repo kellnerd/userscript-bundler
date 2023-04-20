@@ -14,4 +14,6 @@ export * from './src/userscriptMetadata.js';
 
 // Additional type exports
 
+export * from './src/types/BuildOptions';
+
 export * from './src/types/UserscriptMetadata';
