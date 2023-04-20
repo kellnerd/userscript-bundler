@@ -6,7 +6,7 @@ import { buildBookmarklets } from './buildBookmarklets.js';
 import { buildUserscripts } from './buildUserscripts.js';
 import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
-import { sourceAndInstallButton } from './github.js';
+import { GitRepo } from './github.js';
 import { loadMetadata } from './userscriptMetadata.js';
 
 /**
@@ -35,8 +35,10 @@ export async function build({
 	readmePath = 'README.md',
 	debug = false,
 } = {}) {
+	const gitRepo = GitRepo.fromPackageMetadata({ userscriptNameFormatter });
+
 	// build userscripts
-	const userscriptNames = await buildUserscripts(userscriptSourcePath, debug);
+	const userscriptNames = await buildUserscripts({ sourcePath: userscriptSourcePath, gitRepo, debug });
 
 	// prepare bookmarklets (optional)
 	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, debug) : {};
@@ -56,7 +58,7 @@ export async function build({
 		readme.write(`\n### ${userscriptNameFormatter({ baseName, metadata })}\n`);
 		readme.write('\n' + metadata.description + '\n');
 		metadata.features?.forEach((item) => readme.write(`- ${item}\n`));
-		readme.write(sourceAndInstallButton(baseName));
+		readme.write(gitRepo.sourceAndInstallButton(baseName));
 
 		// also insert the code snippet if there is a bookmarklet of the same name
 		const bookmarkletFileName = baseName + '.js';
