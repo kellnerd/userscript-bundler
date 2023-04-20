@@ -25,6 +25,7 @@ function defaultNameFormatter({ metadata }) {
  * @param {import('./types/BuildOptions.js').UserscriptNameFormatter} options.userscriptNameFormatter
  * Function used to format userscript names in documentation.
  * @param {string} options.docSourcePath Directory containing markdown documentation files.
+ * @param {string} options.outputPath Directory where the built userscripts should be stored.
  * @param {string} options.readmePath Path to write generated README file in markdown format.
  * @param {boolean} options.debug Flag to enable debug output.
  */
@@ -33,13 +34,21 @@ export async function build({
 	userscriptSourcePath = 'src/userscripts',
 	userscriptNameFormatter = defaultNameFormatter,
 	docSourcePath = 'doc',
+	outputPath = 'dist',
 	readmePath = 'README.md',
 	debug = false,
 } = {}) {
-	const gitRepo = GitRepo.fromPackageMetadata({ userscriptNameFormatter });
+	const gitRepo = GitRepo.fromPackageMetadata({
+		distributionPath: outputPath,
+		userscriptNameFormatter,
+	});
 
 	// build userscripts
-	const userscriptNames = await buildUserscripts(userscriptSourcePath, { gitRepo, debug });
+	const userscriptNames = await buildUserscripts(userscriptSourcePath, {
+		outputPath,
+		gitRepo,
+		debug,
+	});
 
 	// prepare bookmarklets (optional)
 	const bookmarklets = bookmarkletSourcePath ? await buildBookmarklets(bookmarkletSourcePath, { debug }) : {};

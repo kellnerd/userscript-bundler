@@ -5,14 +5,13 @@ import {
 
 // Inspired by https://github.com/ROpdebee/mb-userscripts/blob/841fa757a21d53a2ce714c7868ffb98116c15ffb/build/plugin-userscript.ts
 export class GitRepo {
-	defaultBranch = 'main';
-	distributionPath = 'dist';
-
 	/**
 	 * @param {URL} repoUrl URL of the git repository which provides the userscripts.
 	 * @param {import('./types/BuildOptions').GitRepoOptions} options
 	 */
 	constructor(repoUrl, {
+		defaultBranch = 'main',
+		distributionPath = 'dist',
 		userscriptNameFormatter,
 	}) {
 		const [owner, repoName] = repoUrl.pathname.match(/^\/([^/]+)\/([^/]+?)(?:\.git|$)/)?.slice(1) ?? [];
@@ -21,6 +20,8 @@ export class GitRepo {
 		this.host = repoUrl.host
 		this.owner = owner;
 		this.repoName = repoName;
+		this.defaultBranch = defaultBranch;
+		this.distributionPath = distributionPath;
 		this.userscriptNameFormatter = userscriptNameFormatter;
 	}
 

@@ -11,6 +11,8 @@ export type UserscriptNameFormatterData = {
 export type UserscriptNameFormatter = (data: UserscriptNameFormatterData) => string;
 
 export type GitRepoOptions = {
+	defaultBranch: string;
+	distributionPath: string;
 	userscriptNameFormatter: UserscriptNameFormatter;
 };
 
@@ -20,6 +22,7 @@ export type GitRepoFromPackageOptions = GitRepoOptions & {
 };
 
 export type UserscriptBuildOptions = {
+	outputPath: string;
 	gitRepo: GitRepo;
 	debug?: boolean;
 };
