@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import path from 'path';
 import {
 	slugify,
 } from '@kellnerd/es-utils/string/casingStyle.js';
@@ -60,7 +61,7 @@ export class GitRepo {
 	 * @param {string} baseName
 	 */
 	userscriptPath(baseName) {
-		return `${this.distributionPath}/${baseName}.user.js`;
+		return path.posix.join(this.distributionPath, `${baseName}.user.js`);
 	}
 
 	/**
