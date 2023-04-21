@@ -6,7 +6,7 @@ import { buildBookmarklets } from './buildBookmarklets.js';
 import { buildUserscripts } from './buildUserscripts.js';
 import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
-import { GitRepo } from './github.js';
+import { GitRepo, getCurrentBranch } from './github.js';
 import { loadMetadata } from './userscriptMetadata.js';
 
 /**
@@ -39,6 +39,7 @@ export async function build({
 	debug = false,
 } = {}) {
 	const gitRepo = GitRepo.fromPackageMetadata({
+		defaultBranch: await getCurrentBranch(),
 		distributionPath: outputPath,
 		userscriptNameFormatter,
 	});

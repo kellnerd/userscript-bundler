@@ -1,5 +1,7 @@
+import { exec } from 'child_process';
 import { readFileSync } from 'fs';
 import path from 'path';
+
 import {
 	slugify,
 } from '@kellnerd/es-utils/string/casingStyle.js';
@@ -82,4 +84,21 @@ export class GitRepo {
 		return `\n[![Install](${installButtonLink})](${this.userscriptPath(baseName)}?raw=1)\n` +
 			`[![Source](${sourceButtonLink})](${this.userscriptPath(baseName)})\n`;
 	}
+}
+
+/**
+ * Determines the currently checked out git branch.
+ * @returns {Promise<string>}
+ */
+export async function getCurrentBranch() {
+	return new Promise((resolve) => {
+		exec('git branch --show-current', (error, stdout) => {
+			if (error) {
+				console.warn('Failed to get current git branch:', error.message);
+				resolve(undefined);
+			} else {
+				resolve(stdout.trim());
+			}
+		});
+	});
 }
