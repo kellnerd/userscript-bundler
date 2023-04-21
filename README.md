@@ -19,7 +19,7 @@ The default build function provides all these features, but you can also write y
 	npm install --save-dev kellnerd/userscript-bundler
 	```
 
-	You can also install a specific version with `npm install --save-dev kellnerd/userscript-bundler#v0.6.0` (where the part after the hash can be any tag or commit).
+	You can also install a specific version with `npm install --save-dev kellnerd/userscript-bundler#v0.8.1` (where the part after the hash can be any tag or commit).
 
 2. Create a build script and save it, e.g. as `build.js`:
 
@@ -27,9 +27,14 @@ The default build function provides all these features, but you can also write y
 	import { build } from '@kellnerd/userscript-bundler';
 
 	build({
-		userscriptSourcePath: 'src/userscripts',
-		bookmarkletSourcePath: 'src/bookmarklets', // bookmarklets are optional
-		docSourcePath: 'doc',
+		// default values below, you can leave out options unless you want to change them
+		userscriptSourcePath: 'src/userscripts/',
+		bookmarkletSourcePath: null,
+		// bookmarklets are optional and have to be enabled:
+		// bookmarkletSourcePath: './src/bookmarklets/',
+		docSourcePath: 'doc/',
+		outputPath: 'dist/',
+		readmePath: 'README.md',
 	});
 	```
 
@@ -89,7 +94,7 @@ The default build function provides all these features, but you can also write y
 
 8. Now you can execute your build script: `node build.js`
 
-	It will create bundled versions of all your userscripts in the `dist/` folder and add a section to the README for each script.
+	It will create bundled versions of all your userscripts in the `outputPath` folder and add a section to the README for each script.
 
 	In case you have created an identically named bookmarklet, it will be included in the same section, all other bookmarklets have separate sections after the userscript sections.
 

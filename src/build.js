@@ -31,10 +31,10 @@ function defaultNameFormatter({ metadata }) {
  */
 export async function build({
 	bookmarkletSourcePath = null,
-	userscriptSourcePath = 'src/userscripts',
+	userscriptSourcePath = 'src/userscripts/',
 	userscriptNameFormatter = defaultNameFormatter,
-	docSourcePath = 'doc',
-	outputPath = 'dist',
+	docSourcePath = 'doc/',
+	outputPath = 'dist/',
 	readmePath = 'README.md',
 	debug = false,
 } = {}) {
