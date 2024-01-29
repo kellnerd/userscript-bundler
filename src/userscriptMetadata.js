@@ -17,8 +17,12 @@ const metadataOrder = [
 	'require',
 	'resource',
 	'grant',
+	'connect',
 	'run-at',
+	'sandbox',
 	'inject-into',
+	'noframes',
+	'unwrap',
 	'match',
 	'include',
 	'exclude-match',
@@ -58,7 +62,7 @@ export async function generateMetadataBlock(userscriptPath, { gitRepo }) {
 	const metadataBlock = metadataOrder.flatMap((key) => {
 		return preferArray(metadata[key])
 			.filter((value) => value)
-			.map((value) => `// @${key.padEnd(maxKeyLength)} ${value}`);
+			.map((value) => `// @${key.padEnd(maxKeyLength)} ${value === true ? '' : value}`);
 	});
 
 	metadataBlock.unshift('// ==UserScript==');

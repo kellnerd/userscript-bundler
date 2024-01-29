@@ -19,10 +19,18 @@ export type UserscriptSpecificMetadata = {
 	resource?: MaybeArray<string>;
 	/** Specify which special APIs can be used when the script executes, see https://wiki.greasespot.net/@grant */
 	grant?: MaybeArray<string>;
+	/** Domains including subdomains which are allowed to be retrieved by `GM_xmlhttpRequest`. Supported by TM. */
+	connect?: MaybeArray<string>;
 	/** Decide when the script will execute. */
 	'run-at'?: 'document-end' | 'document-start' | 'document-idle';
+	/** Decide which context the script will be injected into. Supported by TM. */
+	sandbox?: 'raw' | 'JavaScript' | 'DOM' | 'MAIN_WORLD' | 'ISOLATED_WORLD' | 'USERSCRIPT_WORLD';
 	/** Decide which context the script will be injected into. Supported by VM. */
 	'inject-into'?: 'page' | 'content' | 'auto';
+	/** Run only in the top-level document, never in nested frames. */
+	noframes?: true;
+	/** Inject the userscript without any wrapper and sandbox into the page. Supported by TM, VM. */
+	unwrap?: true,
 	/** Rules to decide whether a script should be executed, see https://developer.chrome.com/extensions/match_patterns */
 	match?: MaybeArray<string>;
 	/** See {@linkcode UserscriptSpecificMetadata.match}. Supported by VM. */
