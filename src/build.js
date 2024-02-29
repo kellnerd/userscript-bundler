@@ -62,6 +62,10 @@ export async function build({
 	const readmeHeader = fs.readFileSync(path.join(docSourcePath, '_header.md'), { encoding: 'utf-8' });
 	readme.write(readmeHeader);
 
+	// obtain all documentation files, keep track of unprocessed files
+	const docFiles = await getMarkdownFiles(docSourcePath);
+	const remainingDocFiles = new Set(docFiles);
+
 	// write userscripts and their extracted documentation to the README
 	readme.write('\n## Userscripts\n');
 
@@ -73,6 +77,13 @@ export async function build({
 		readme.write('\n' + metadata.description + '\n');
 		metadata.features?.forEach((item) => readme.write(`- ${item}\n`));
 		readme.write(gitRepo.sourceAndInstallButton(baseName));
+
+		// append documentation if there is a documentation file with the same base name
+		const docFile = docFiles.find((filename) => filename.startsWith(baseName));
+		if (docFile) {
+			appendDocFileToReadme(docFile);
+			remainingDocFiles.delete(docFile);
+		}
 
 		// also insert the code snippet if there is a bookmarklet of the same name
 		const bookmarkletFileName = baseName + '.js';
@@ -102,15 +113,19 @@ export async function build({
 		}
 	}
 
-	// append all additional documentation files to the README
-	const docs = await getMarkdownFiles(docSourcePath);
+	// append all remaining documentation files to the README
+	remainingDocFiles.forEach(appendDocFileToReadme);
+	readme.close();
 
-	docs.map((file) => path.join(docSourcePath, file)).forEach((filePath) => {
+	/**
+	 * Appends a documentation file from the documentation directory to the README.
+	 * @param {string} filename Name of the (Markdown) documentation file.
+	 */
+	function appendDocFileToReadme(filename) {
+		const filePath = path.join(docSourcePath, filename);
 		const content = fs.readFileSync(filePath, { encoding: 'utf-8' });
 		readme.write('\n' + content);
-	});
-
-	readme.close();
+	}
 }
 
 

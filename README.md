@@ -63,7 +63,11 @@ The default build function provides all these features, but you can also write y
 	export default metadata;
 	```
 
-6. *(Optional)* Create a new module which serves as entry point of your bookmarklet in your bookmarklet source folder, e.g. `exampleBookmarklet.js`:
+6. If you want to include additional documentation besides the brief userscript description in the generated README, there are two possibilities (which are not mutually exclusive):
+	1. Specify your userscript's features in the `EnhancedUserscriptMetadata.features` property (in `example.meta.js`).
+	2. Create a Markdown file with the same basename in your documentation folder (`doc/example.md`).
+
+7. *(Optional)* Create a new module which serves as entry point of your bookmarklet in your bookmarklet source folder, e.g. `exampleBookmarklet.js`:
 
 	```js
 	/** 
@@ -75,7 +79,7 @@ The default build function provides all these features, but you can also write y
 	console.log('Hello world!');
 	```
 
-7. Ensure that your `package.json` file contains the URL of your GitHub repository, it is needed to automatically generate update URLs for your userscripts.
+8. Ensure that your `package.json` file contains the URL of your GitHub repository, it is needed to automatically generate update URLs for your userscripts.
 
 	```jsonc
 	{
@@ -92,7 +96,7 @@ The default build function provides all these features, but you can also write y
 	}
 	```
 
-8. Now you can execute your build script: `node build.js`
+9.  Now you can execute your build script: `node build.js`
 
 	It will create bundled versions of all your userscripts in the `outputPath` folder and add a section to the README for each script.
 
