@@ -19,7 +19,7 @@ The default build function provides all these features, but you can also write y
 	npm install --save-dev kellnerd/userscript-bundler
 	```
 
-	You can also install a specific version with `npm install --save-dev kellnerd/userscript-bundler#v0.8.1` (where the part after the hash can be any tag or commit).
+	You can also install a specific version with `npm install --save-dev kellnerd/userscript-bundler#v0.8.4` (where the part after the hash can be any tag or commit).
 
 2. Create a build script and save it, e.g. as `build.js`:
 
