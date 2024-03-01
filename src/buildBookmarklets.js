@@ -1,6 +1,5 @@
 import path from 'path';
 import { rollup } from 'rollup';
-import rollupIgnore from 'rollup-plugin-ignore';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { minify } from 'terser';
 import { zipObject } from '@kellnerd/es-utils/object/zipObject.js';
@@ -50,7 +49,6 @@ export async function buildBookmarklet(modulePath, {
 		},
 		plugins: [
 			nodeResolve(),
-			rollupIgnore(['cross-fetch/dist/node-polyfill.js']),
 		],
 	};
 
