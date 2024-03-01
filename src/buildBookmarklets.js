@@ -1,19 +1,26 @@
 import path from 'path';
 import { rollup } from 'rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import rollupSucrase from '@rollup/plugin-sucrase';
 import { minify } from 'terser';
 import { zipObject } from '@kellnerd/es-utils/object/zipObject.js';
 
 import { getScriptFiles } from './getFiles.js';
 
+/** Possible file extensions of bookmarklet entry modules. */
+export const bookmarkletExtensions = ['.js', '.ts'];
+
+/** Regular expression which matches the possible file extensions of bookmarklet entry modules. */
+export const bookmarkletExtensionPattern = /\.[jt]s$/;
+
 /**
- * Builds a bookmarklet for each JavaScript module inside the given source directory.
+ * Builds a bookmarklet for each JavaScript/TypeScript module inside the given source directory.
  * @param {string} sourcePath Source directory containing the executable modules.
  * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} options
  * @returns {Promise<{[name: string]: string}>} Object which maps script names to bookmarklets.
  */
 export async function buildBookmarklets(sourcePath, options) {
-	const scriptFiles = await getScriptFiles(sourcePath);
+	const scriptFiles = await getScriptFiles(sourcePath, bookmarkletExtensions);
 	const bookmarklets = await Promise.all(scriptFiles
 		.map((file) => path.join(sourcePath, file))
 		.map((modulePath) => buildBookmarklet(modulePath, options))
@@ -49,6 +56,10 @@ export async function buildBookmarklet(modulePath, {
 		},
 		plugins: [
 			nodeResolve(),
+			rollupSucrase({
+				transforms: ['typescript'],
+				disableESTransforms: true,
+			}),
 		],
 	};
 

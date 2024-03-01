@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { camelToTitleCase } from '@kellnerd/es-utils/string/casingStyle.js';
 
-import { buildBookmarklets } from './buildBookmarklets.js';
+import { bookmarkletExtensionPattern, buildBookmarklets } from './buildBookmarklets.js';
 import { buildUserscripts } from './buildUserscripts.js';
 import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
@@ -56,6 +56,7 @@ export async function build({
 		outputPath: path.join(outputPath, 'bookmarklets'),
 		debug,
 	}) : {};
+	const bookmarkletFileNames = Object.keys(bookmarklets);
 
 	// prepare README file and write header
 	const readme = fs.createWriteStream(readmePath);
@@ -86,8 +87,9 @@ export async function build({
 		}
 
 		// also insert the code snippet if there is a bookmarklet of the same name
-		const bookmarkletFileName = baseName + '.js';
-		if (bookmarkletFileName in bookmarklets) {
+		const bookmarkletFileName = bookmarkletFileNames.find((fileName) =>
+			fileName.replace(bookmarkletExtensionPattern, '') === baseName);
+		if (bookmarkletFileName) {
 			const bookmarkletPath = path.join(bookmarkletSourcePath, bookmarkletFileName);
 
 			readme.write('\nAlso available as a bookmarklet with less features:\n');
@@ -103,7 +105,7 @@ export async function build({
 		readme.write('\n## Bookmarklets\n');
 
 		for (let fileName in bookmarklets) {
-			const baseName = path.basename(fileName, '.js');
+			const baseName = fileName.replace(bookmarkletExtensionPattern, '');
 			const bookmarkletPath = path.join(bookmarkletSourcePath, fileName);
 
 			readme.write(`\n### [${camelToTitleCase(baseName)}](${relevantSourceFile(fileName, bookmarkletSourcePath)})\n`);

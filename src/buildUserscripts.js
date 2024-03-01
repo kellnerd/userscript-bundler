@@ -14,7 +14,7 @@ import { generateMetadataBlock } from './userscriptMetadata.js';
  * @returns {Promise<string[]>} Array of userscript file names (without extension).
  */
 export async function buildUserscripts(sourcePath, options) {
-	const scriptFiles = await getScriptFiles(sourcePath, '.user.js');
+	const scriptFiles = await getScriptFiles(sourcePath, ['.user.js']);
 	scriptFiles
 		.map((file) => path.join(sourcePath, file))
 		.forEach((modulePath) => buildUserscript(modulePath, options));
