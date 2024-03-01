@@ -6,6 +6,7 @@ Node.js tools to build userscripts and bookmarklets from ES modules.
 
 - Bundle multiple JavaScript modules into a single userscript (or bookmarklet) using [rollup](https://www.rollupjs.org/)
 - Generate userscript metadata blocks automatically with default values
+- Transform TypeScript into JavaScript using [Sucrase](https://sucrase.io/)
 - Minify bookmarklets using [terser](https://terser.org/)
 - Generate a README file with descriptions, userscript install buttons and bookmarklet code blocks
 
@@ -43,7 +44,7 @@ The default build function provides all these features, but you can also write y
 	The build script in this example will automatically generate your README file and use `doc/_header.md` as the document header.
 	All other Markdown files in the specified doc folder will be appended to the end of the final README.
 
-4. Create a new module which serves as entry point of your userscript in your userscript source folder, e.g. `example.user.js`:
+4. Create a new module which serves as entry point of your userscript in your userscript source folder, e.g. `example.user.js` or `example.user.ts`:
 
 	```js
 	console.log('Hello world!');
@@ -67,7 +68,7 @@ The default build function provides all these features, but you can also write y
 	1. Specify your userscript's features in the `EnhancedUserscriptMetadata.features` property (in `example.meta.js`).
 	2. Create a Markdown file with the same basename in your documentation folder (`doc/example.md`).
 
-7. *(Optional)* Create a new module which serves as entry point of your bookmarklet in your bookmarklet source folder, e.g. `exampleBookmarklet.js`:
+7. *(Optional)* Create a new module which serves as entry point of your bookmarklet in your bookmarklet source folder, e.g. `exampleBookmarklet.js` or `exampleBookmarklet.ts`:
 
 	```js
 	/** 
