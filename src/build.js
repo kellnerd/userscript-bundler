@@ -7,7 +7,7 @@ import { buildUserscripts } from './buildUserscripts.js';
 import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
 import { GitRepo, getCurrentBranch } from './github.js';
-import { loadMetadata } from './userscriptMetadata.js';
+import { loadMetadata, userscriptExtensionPattern } from './userscriptMetadata.js';
 
 /**
  * Returns the formatted name of the userscript for use in documentation.
@@ -45,7 +45,7 @@ export async function build({
 	});
 
 	// build userscripts
-	const userscriptNames = await buildUserscripts(userscriptSourcePath, {
+	const userscriptFileNames = await buildUserscripts(userscriptSourcePath, {
 		outputPath,
 		gitRepo,
 		debug,
@@ -70,8 +70,9 @@ export async function build({
 	// write userscripts and their extracted documentation to the README
 	readme.write('\n## Userscripts\n');
 
-	for (let baseName of userscriptNames) {
-		const filePath = path.join(userscriptSourcePath, baseName + '.user.js');
+	for (let fileName of userscriptFileNames) {
+		const baseName = fileName.replace(userscriptExtensionPattern, '');
+		const filePath = path.join(userscriptSourcePath, fileName);
 		const metadata = await loadMetadata(filePath);
 
 		readme.write(`\n### ${userscriptNameFormatter({ baseName, metadata })}\n`);

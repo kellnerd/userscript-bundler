@@ -2,6 +2,12 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { preferArray } from '@kellnerd/es-utils/array/scalar.js';
 
+/** Possible file extensions of userscript entry modules. */
+export const userscriptExtensions = ['.user.js', '.user.ts'];
+
+/** Regular expression which matches the possible file extensions of userscript entry modules. */
+export const userscriptExtensionPattern = /\.user\.[jt]s$/;
+
 /** @type {Array<keyof import('./types/UserscriptMetadata.js').UserscriptMetadata>} */
 const metadataOrder = [
 	'name',
@@ -35,7 +41,7 @@ const metadataOrder = [
  * @param {import('./types/BuildOptions.js').UserscriptMetadataOptions} options
  */
 export async function generateMetadataBlock(userscriptPath, { gitRepo }) {
-	const baseName = path.basename(userscriptPath, '.user.js');
+	const baseName = path.basename(userscriptPath).replace(userscriptExtensionPattern, '');
 	const date = new Date(); // current date will be used as version identifier
 	const maxKeyLength = Math.max(...metadataOrder.map((key) => key.length));
 
@@ -77,7 +83,7 @@ export async function generateMetadataBlock(userscriptPath, { gitRepo }) {
  * @returns {Promise<import('./types/UserscriptMetadata.js').EnhancedUserscriptMetadata>}
  */
 export async function loadMetadata(userscriptPath) {
-	const metadataPath = userscriptPath.replace(/\.user\.js$/, '.meta.js');
+	const metadataPath = userscriptPath.replace(userscriptExtensionPattern, '.meta.js');
 	const metadataModule = await import(pathToFileURL(metadataPath));
 
 	return metadataModule.default;

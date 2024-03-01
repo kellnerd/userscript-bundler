@@ -3,23 +3,24 @@ import { rollup } from 'rollup';
 import rollupImage from '@rollup/plugin-image';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import rollupStrip from '@rollup/plugin-strip';
+import rollupSucrase from '@rollup/plugin-sucrase';
 
 import { getScriptFiles } from './getFiles.js';
-import { generateMetadataBlock } from './userscriptMetadata.js';
+import { generateMetadataBlock, userscriptExtensions } from './userscriptMetadata.js';
 
 /**
- * Build a userscript for each JavaScript module inside the given source directory.
+ * Build a userscript for each JavaScript/TypeScript module inside the given source directory.
  * @param {string} sourcePath Source directory containing the executable modules.
  * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
- * @returns {Promise<string[]>} Array of userscript file names (without extension).
+ * @returns {Promise<string[]>} Array of userscript file names (with extension).
  */
 export async function buildUserscripts(sourcePath, options) {
-	const scriptFiles = await getScriptFiles(sourcePath, ['.user.js']);
+	const scriptFiles = await getScriptFiles(sourcePath, userscriptExtensions);
 	scriptFiles
 		.map((file) => path.join(sourcePath, file))
 		.forEach((modulePath) => buildUserscript(modulePath, options));
 
-	return scriptFiles.map((file) => path.basename(file, '.user.js'));
+	return scriptFiles;
 }
 
 
@@ -49,6 +50,10 @@ export async function buildUserscript(modulePath, {
 		},
 		plugins: [
 			nodeResolve(),
+			rollupSucrase({
+				transforms: ['typescript'],
+				disableESTransforms: true,
+			}),
 			rollupImage(),
 			rollupStrip({
 				functions: debug ? [] : ['console.debug'],
