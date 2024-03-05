@@ -30,7 +30,6 @@ export async function buildUserscripts(sourcePath, options) {
  * @param {import('./types/BuildOptions.js').UserscriptBuildOptions} options
  */
 export async function buildUserscript(modulePath, {
-	outputPath,
 	gitRepo,
 	debug = false,
 }) {
@@ -44,7 +43,7 @@ export async function buildUserscript(modulePath, {
 			moduleSideEffects: false,
 		},
 		output: {
-			dir: outputPath,
+			dir: gitRepo.distributionPath,
 			format: 'iife',
 			banner: generateMetadataBlock(modulePath, { gitRepo }),
 		},

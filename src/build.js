@@ -46,7 +46,6 @@ export async function build({
 
 	// build userscripts
 	const userscriptFileNames = await buildUserscripts(userscriptSourcePath, {
-		outputPath,
 		gitRepo,
 		debug,
 	});

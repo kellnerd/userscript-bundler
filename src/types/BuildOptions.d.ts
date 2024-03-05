@@ -22,7 +22,6 @@ export type GitRepoFromPackageOptions = GitRepoOptions & {
 };
 
 export type UserscriptBuildOptions = {
-	outputPath: string;
 	gitRepo: GitRepo;
 	debug?: boolean;
 };
