@@ -6,7 +6,8 @@ import rollupStrip from '@rollup/plugin-strip';
 import rollupSucrase from '@rollup/plugin-sucrase';
 
 import { getScriptFiles } from './getFiles.js';
-import { generateMetadataBlock, userscriptExtensions } from './userscriptMetadata.js';
+import { userscriptExtensions } from './userscriptMetadata.js';
+import userscript from '../plugin.js';
 
 /**
  * Build a userscript for each JavaScript/TypeScript module inside the given source directory.
@@ -45,7 +46,6 @@ export async function buildUserscript(modulePath, {
 		output: {
 			dir: gitRepo.distributionPath,
 			format: 'iife',
-			banner: generateMetadataBlock(modulePath, { gitRepo }),
 		},
 		plugins: [
 			nodeResolve(),
@@ -57,6 +57,7 @@ export async function buildUserscript(modulePath, {
 			rollupStrip({
 				functions: debug ? [] : ['console.debug'],
 			}),
+			userscript({ gitRepo }),
 		],
 	};
 
