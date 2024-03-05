@@ -10,13 +10,13 @@ import {
 export class GitRepo {
 	/**
 	 * @param {URL} repoUrl URL of the git repository which provides the userscripts.
-	 * @param {import('./types/BuildOptions').GitRepoOptions} options
+	 * @param {Partial<import('./types/BuildOptions').GitRepoOptions>} options
 	 */
 	constructor(repoUrl, {
 		defaultBranch = 'main',
 		distributionPath = 'dist',
-		userscriptNameFormatter,
-	}) {
+		userscriptNameFormatter = defaultNameFormatter,
+	} = {}) {
 		const [owner, repoName] = repoUrl.pathname.match(/^\/([^/]+)\/([^/]+?)(?:\.git|$)/)?.slice(1) ?? [];
 		if (!owner || !repoName) throw new Error(`Malformed git repo URL ${repoUrl}`);
 
@@ -43,7 +43,7 @@ export class GitRepo {
 	static fromPackageMetadata({
 		packageJsonPath = 'package.json',
 		...repoOptions
-	}) {
+	} = {}) {
 		/** @type {typeof import('../package.json')} */
 		const metadata = JSON.parse(readFileSync(packageJsonPath));
 		const repoUrl = new URL(metadata.repository.url);
@@ -101,4 +101,12 @@ export async function getCurrentBranch() {
 			}
 		});
 	});
+}
+
+/**
+ * Returns the formatted name of the userscript for use in documentation.
+ * @type {import('./types/BuildOptions.js').UserscriptNameFormatter}
+ */
+export function defaultNameFormatter({ metadata }) {
+	return metadata.name;
 }

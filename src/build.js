@@ -6,16 +6,8 @@ import { bookmarkletExtensionPattern, buildBookmarklets } from './buildBookmarkl
 import { buildUserscripts } from './buildUserscripts.js';
 import { extractDocumentation } from './extractDocumentation.js';
 import { getMarkdownFiles } from './getFiles.js'
-import { GitRepo, getCurrentBranch } from './github.js';
+import { GitRepo, defaultNameFormatter, getCurrentBranch } from './github.js';
 import { loadMetadata, userscriptExtensionPattern } from './userscriptMetadata.js';
-
-/**
- * Returns the formatted name of the userscript for use in documentation.
- * @type {import('./types/BuildOptions.js').UserscriptNameFormatter}
- */
-function defaultNameFormatter({ metadata }) {
-	return metadata.name;
-}
 
 /**
  * Builds userscripts, prepares bookmarklets and generates a nicely formatted documentation page.

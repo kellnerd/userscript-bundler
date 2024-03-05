@@ -16,7 +16,7 @@ export type GitRepoOptions = {
 	userscriptNameFormatter: UserscriptNameFormatter;
 };
 
-export type GitRepoFromPackageOptions = GitRepoOptions & {
+export type GitRepoFromPackageOptions = Partial<GitRepoOptions> & {
 	/** Path to the `package.json` file of the repository. */
 	packageJsonPath?: string;
 };
