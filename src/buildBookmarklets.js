@@ -27,13 +27,13 @@ export async function buildBookmarklets(sourcePath, options) {
 /**
  * Bundles and minifies the given module into a bookmarklet.
  * @param {string} modulePath Path to the executable module of the bookmarklet.
- * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} options
+ * @param {import('./types/BuildOptions.js').BookmarkletBuildOptions} [options]
  * @returns {Promise<string>} Bookmarklet code as a `javascript:` URI.
  */
 export async function buildBookmarklet(modulePath, {
 	outputPath,
 	debug = false,
-}) {
+} = {}) {
 	/**
 	 * Bundle all used modules into an IIFE with rollup.
 	 * @type {import('rollup').RollupOptions}
