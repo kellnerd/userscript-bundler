@@ -49,7 +49,9 @@ export async function buildBookmarklet(modulePath, {
 			strict: false,
 		},
 		plugins: [
-			nodeResolve(),
+			nodeResolve({
+				browser: true,
+			}),
 			rollupIgnore(['cross-fetch/dist/node-polyfill.js']),
 		],
 	};

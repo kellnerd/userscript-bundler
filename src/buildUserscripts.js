@@ -49,7 +49,9 @@ export async function buildUserscript(modulePath, {
 			banner: generateMetadataBlock(modulePath, { gitRepo }),
 		},
 		plugins: [
-			nodeResolve(),
+			nodeResolve({
+				browser: true,
+			}),
 			rollupIgnore(['cross-fetch/dist/node-polyfill.js']),
 			rollupImage(),
 			rollupStrip({
