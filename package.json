@@ -34,7 +34,7 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-strip": "^3.0.2",
     "extract-comments": "^1.1.0",
-    "rollup": "^3.13.0",
+    "rollup": "^3.29.5",
     "rollup-plugin-ignore": "^1.0.10",
     "terser": "^5.14.2"
   }
