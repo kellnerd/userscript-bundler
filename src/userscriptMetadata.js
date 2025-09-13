@@ -108,5 +108,5 @@ export function createURLRuleRegex(domainAndPathRegex, {
  * @param {string} pathRegex Regular expression that matches a path on musicbrainz.org.
  */
 export function createMusicBrainzURLRule(pathRegex) {
-	return createURLRuleRegex(String.raw`((beta|test)\.)?musicbrainz\.org/` + pathRegex);
+	return createURLRuleRegex(String.raw`((beta|test)\.)?musicbrainz\.(org|eu)/` + pathRegex);
 }
